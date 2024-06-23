@@ -34,10 +34,17 @@ public class NERFBotTeleOp extends OpMode {
         // Turret pitch code
         double pitchControlValue = -gamepad2.left_stick_y * 0.2;
         robot.pitchControl.addToPosition(pitchControlValue);
+        // Turret Yaw code
+        double yawControlValue = gamepad2.right_stick_x * 0.2;
+        robot.yawControl.addToPosition(yawControlValue);
+        // press A to fire
+        robot.triggerControl.fireIf(gamepad2.a);
+
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Yaw", "yaw: " + robot.yawTurret.getPosition());
+        telemetry.addData("IMU Heading", robot.getHeading());
+        telemetry.addData("Turret Yaw", "yaw: " + robot.yawControl.currentPosition);
         telemetry.addData("Pitch", "pitch: " + robot.pitchControl.currentPosition);
         telemetry.addData("Linear Position", robot.reload.getCurrentPosition());
         telemetry.update();

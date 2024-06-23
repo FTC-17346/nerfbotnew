@@ -22,6 +22,7 @@ public class NERFBotHardware {
 
     public ServoImplEx yawTurret;
     private ServoImplEx pitchTurret;
+    private ServoImplEx trigger;
 
     public DcMotorEx reload;
 
@@ -52,10 +53,12 @@ public class NERFBotHardware {
         backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         yawTurret = hwMap.get(ServoImplEx.class, "yawTurret");
-        pitchTurret = hwMap.get(ServoImplEx.class, "pitchTurret");
+        pitchTurret = hwMap.get(ServoImplEx.class, "trigger");
+        trigger = hwMap.get(ServoImplEx.class, "trigger");
 
         pitchTurret.setPwmRange(new PwmControl.PwmRange(500, 2500));
         yawTurret.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        trigger.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
         reload = hwMap.get(DcMotorEx.class, "reload");
         reload.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -76,6 +79,10 @@ public class NERFBotHardware {
 
     public double getHeading() {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+    }
+
+    public double getHeadingDegrees() {
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
     }
 
     public void resetHeading() {
@@ -109,8 +116,53 @@ public class NERFBotHardware {
         backRight.setPower(rightBackPower);
     }
 
+
+    public enum TriggerState {
+        OPEN,
+        FIRING
+    }
+
+    public class TriggerControl {
+        public TriggerState state = TriggerState.OPEN;
+        public static final double FIRING_MS = 250;
+        public ElapsedTime firingTime = new ElapsedTime();
+
+        private void opening() {
+            trigger.setPwmDisable();
+        }
+
+        private void firing() {
+            trigger.setPwmEnable();
+            trigger.setPosition(0.7);
+        }
+
+        public void fire() {
+            if (state == TriggerState.FIRING) {
+                if (firingTime.milliseconds() <= FIRING_MS) {
+                    firing();
+                } else {
+                    opening();
+                }
+            } else {
+                state = TriggerState.FIRING;
+                firingTime.reset();
+            }
+        }
+
+        public void open() {
+            state = TriggerState.OPEN;
+        }
+
+        public void fireIf(boolean button) {
+            if (button) fire();
+            else open();
+        }
+    }
+
+    public TriggerControl triggerControl = this.new TriggerControl();
+
     public class PitchControl {
-        public static final double DEFAULT_POSITION = 0.6;
+        public static final double DEFAULT_POSITION = 0.4;
         public double currentPosition = DEFAULT_POSITION;
 
         public void setPosition(double pos) {
@@ -121,14 +173,56 @@ public class NERFBotHardware {
         private double last_update = -1;
 
         public void addToPosition(double positionChangePerSecond) {
-            if (last_update == -1) last_update = runtime.seconds() - 0.001;
             double elapsedTime = runtime.seconds() - last_update;
-            double changeInPosition = positionChangePerSecond * elapsedTime;
-            currentPosition += changeInPosition;
-            currentPosition = Range.clip(currentPosition, 0, 1);
-            pitchTurret.setPosition(currentPosition);
+            last_update = runtime.seconds();
+            if (elapsedTime > 0.2) elapsedTime = 0.01; // limit rapid changes
+            double position = currentPosition + positionChangePerSecond * elapsedTime;
+            position = Range.clip(position, .27, .54);
+            setPosition(position);
         }
     }
 
     public PitchControl pitchControl = this.new PitchControl();
+
+    public class YawControl {
+        public static final double FULLY_STRAIGHT_POSITION = 0.48;
+
+        public double currentPosition = FULLY_STRAIGHT_POSITION;
+
+
+        public void setPosition(double pos) {
+            currentPosition = pos;
+            double adjustedPositionDegrees = (currentPosition * 300 +
+                    getHeadingDegrees());
+            adjustedPositionDegrees %= 360;
+            if (adjustedPositionDegrees >= 0 && adjustedPositionDegrees <= 300) {
+                // we are in a valid range so just set the position
+                double adjustedPosition = adjustedPositionDegrees / 300;
+                yawTurret.setPosition(adjustedPosition);
+            } else {
+                // set to the closer position
+                // 300-330: 1 is closer
+                // 330-360: 0 is closer
+                // we could also just not set the position here if we prefer that
+                if (adjustedPositionDegrees > 300 && adjustedPositionDegrees <= 330) {
+                    yawTurret.setPosition(1);
+                } else {
+                    yawTurret.setPosition(0);
+                }
+            }
+        }
+
+        private double last_update = -1;
+
+        public void addToPosition(double positionChangePerSecond) {
+            double elapsedTime = runtime.seconds() - last_update;
+            last_update = runtime.seconds();
+            if (elapsedTime > 0.2) elapsedTime = 0.01; // limit rapid changes
+            double position = currentPosition + positionChangePerSecond * elapsedTime;
+            position = Range.clip(position, 0, 1);
+            setPosition(position);
+        }
+    }
+
+    public YawControl yawControl = this.new YawControl();
 }
