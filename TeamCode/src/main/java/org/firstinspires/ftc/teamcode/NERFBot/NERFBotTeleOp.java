@@ -47,14 +47,8 @@ public class NERFBotTeleOp extends OpMode {
 
 
         double max;
-        double yaw = gamepad1.right_stick_x;/
-        if (gamepad2.left_stick_y > 0) {
-            double pitchTurret = ((gamepad2.left_stick_y)/2)+0.5;
-        } else if (gamepad2.left_stick_y < 0){
-            double pitchTurret = ((gamepad2.left_stick_y)/10);
-        } else {
-            double pitchTurret = (gamepad2.left_stick_y);
-        }
+        double yaw = gamepad1.right_stick_x;
+        double pitchTurret = ((gamepad2.left_stick_y + 1)/2)/1000;
 
         double leftFrontPower = rotY + rotX + yaw;
         double rightFrontPower = rotY - rotX - yaw;
@@ -82,10 +76,8 @@ public class NERFBotTeleOp extends OpMode {
         robot.frontRight.setPower(rightFrontPower);
         robot.backLeft.setPower(leftBackPower);
         robot.backRight.setPower(rightBackPower);
-        robot.yawTurret.setPosition(YawPosition);
-        if ( gamepad2.left_stick_y > 0 || gamepad2.left_stick_y < 0) {
-            robot.pitchTurret.setPosition(robot.pitchTurret.getPosition() + pitchTurret);
-        }
+        //robot.yawTurret.setPosition(YawPosition);
+        robot.pitchTurret.setPosition((robot.pitchTurret.getPosition() + pitchTurret));
                // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
