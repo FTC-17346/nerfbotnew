@@ -3,14 +3,8 @@ package org.firstinspires.ftc.teamcode.NERFBot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
-@TeleOp(name="NERF Bot TeleOp", group="NERFBot")
+@TeleOp(name = "NERF Bot TeleOp", group = "NERFBot")
 public class NERFBotTeleOp extends OpMode {
     NERFBotHardware robot;
 
@@ -18,8 +12,8 @@ public class NERFBotTeleOp extends OpMode {
 
     //@Override
     public void init() {
-         robot = new NERFBotHardware(this);
-         robot.init();
+        robot = new NERFBotHardware(this);
+        robot.init();
     }
 
     @Override
@@ -41,8 +35,7 @@ public class NERFBotTeleOp extends OpMode {
         double pitchControlValue = -gamepad2.left_stick_y * 0.2;
         robot.pitchControl.addToPosition(pitchControlValue);
 
-
-               // Show the elapsed game time and wheel power.
+        // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Yaw", "yaw: " + robot.yawTurret.getPosition());
         telemetry.addData("Pitch", "pitch: " + robot.pitchControl.currentPosition);

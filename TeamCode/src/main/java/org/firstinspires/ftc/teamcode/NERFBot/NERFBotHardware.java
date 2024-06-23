@@ -29,12 +29,13 @@ public class NERFBotHardware {
     private ElapsedTime runtime = new ElapsedTime();
 
     private HardwareMap hwMap;
+
     public NERFBotHardware(OpMode opmode) {
         myOpMode = opmode;
         hwMap = myOpMode.hardwareMap;
     }
 
-    public void init()    {
+    public void init() {
         frontLeft = hwMap.get(DcMotorEx.class, "frontLeft");
         frontRight = hwMap.get(DcMotorEx.class, "frontRight");
         backLeft = hwMap.get(DcMotorEx.class, "backLeft");
@@ -82,17 +83,16 @@ public class NERFBotHardware {
     }
 
     public void drive(double forward, double turn, double yaw) {
-        double leftFrontPower  = forward + turn + yaw;
-        double rightFrontPower = forward - turn  - yaw;
-        double leftBackPower  = forward - turn + yaw;
-        double rightBackPower = forward + turn  - yaw;
+        double leftFrontPower = forward + turn + yaw;
+        double rightFrontPower = forward - turn - yaw;
+        double leftBackPower = forward - turn + yaw;
+        double rightBackPower = forward + turn - yaw;
         double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
         max = Math.max(max, Math.abs(leftBackPower));
         max = Math.max(max, Math.abs(rightBackPower));
 
 
-        if (max > 1.0)
-        {
+        if (max > 1.0) {
             leftFrontPower /= max;
             rightFrontPower /= max;
             leftBackPower /= max;
@@ -102,7 +102,7 @@ public class NERFBotHardware {
         setDrivePower(leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
     }
 
-    public void setDrivePower(double leftFrontPower, double rightFrontPower,double leftBackPower, double rightBackPower) {
+    public void setDrivePower(double leftFrontPower, double rightFrontPower, double leftBackPower, double rightBackPower) {
         frontLeft.setPower(leftFrontPower);
         frontRight.setPower(rightFrontPower);
         backLeft.setPower(leftBackPower);
@@ -112,11 +112,14 @@ public class NERFBotHardware {
     public class PitchControl {
         public static final double DEFAULT_POSITION = 0.6;
         public double currentPosition = DEFAULT_POSITION;
+
         public void setPosition(double pos) {
             currentPosition = pos;
             pitchTurret.setPosition(currentPosition);
         }
+
         private double last_update = -1;
+
         public void addToPosition(double positionChangePerSecond) {
             if (last_update == -1) last_update = runtime.seconds() - 0.001;
             double elapsedTime = runtime.seconds() - last_update;
