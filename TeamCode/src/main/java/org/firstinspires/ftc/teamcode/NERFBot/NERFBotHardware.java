@@ -53,7 +53,7 @@ public class NERFBotHardware {
         backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         yawTurret = hwMap.get(ServoImplEx.class, "yawTurret");
-        pitchTurret = hwMap.get(ServoImplEx.class, "trigger");
+        pitchTurret = hwMap.get(ServoImplEx.class, "pitchTurret");
         trigger = hwMap.get(ServoImplEx.class, "trigger");
 
         pitchTurret.setPwmRange(new PwmControl.PwmRange(500, 2500));
