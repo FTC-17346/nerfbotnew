@@ -74,9 +74,9 @@ public class NERFBotOpticalOdometry extends LinearOpMode {
         }
         else if (pos.y > Xpos +1 && pos.y< Xpos -1){
             if (pos.y > Xpos + .25){
-                robot.backLeft.setPower(Speed/2);
+                robot.backLeft.setPower(-Speed/2);
                 robot.frontLeft.setPower(-Speed/2);
-                robot.frontRight.setPower(Speed);
+                robot.frontRight.setPower(-Speed);
                 robot.backRight.setPower(-Speed/2);
             }
             if (pos.x < Xpos - .25){
@@ -97,6 +97,20 @@ public class NERFBotOpticalOdometry extends LinearOpMode {
             robot.frontLeft.setPower(Speed);
             robot.frontRight.setPower(-Speed);
             robot.backRight.setPower(-Speed);
+        }
+        else if (pos.h > Xpos +1 && pos.h< Xpos -1){
+            if (pos.h > Xpos + .25){
+                robot.backLeft.setPower(Speed/2);
+                robot.frontLeft.setPower(Speed/2);
+                robot.frontRight.setPower(-Speed);
+                robot.backRight.setPower(-Speed/2);
+            }
+            if (pos.h < Xpos - .25){
+                robot.backLeft.setPower(-Speed/2);
+                robot.frontLeft.setPower(-Speed/2);
+                robot.frontRight.setPower(Speed/2);
+                robot.backRight.setPower(Speed/2);
+            }
         }
         else {
             robot.backLeft.setPower(0);
