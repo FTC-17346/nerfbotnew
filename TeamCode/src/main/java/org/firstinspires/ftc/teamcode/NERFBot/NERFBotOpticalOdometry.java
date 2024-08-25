@@ -18,8 +18,13 @@ public class NERFBotOpticalOdometry extends LinearOpMode {
         robot.myOtos.resetTracking();
         robot.myOtos.calibrateImu();
         waitForStart();
+        SparkFunOTOS.Pose2D pos;
         while (opModeIsActive()) {
-            LinearMovement(1, 0, 0, .5);
+            pos = robot.myOtos.getPosition();
+            LinearMovement(5, 0, 0, .2);
+            telemetry.addLine("X Position :" +pos.x);
+            telemetry.addLine("Y Position :" +pos.y);
+            telemetry.update();
         }
 
 
@@ -29,32 +34,48 @@ public class NERFBotOpticalOdometry extends LinearOpMode {
 
     public void LinearMovement(double Xpos, double Ypos, double Heading, double Speed){
         SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
-
-
-//
-        while ( pos.x < Xpos ) {
+        if ( pos.x < Xpos -.3) {
             robot.backLeft.setPower(-Speed);
             robot.frontLeft.setPower(Speed);
             robot.frontRight.setPower(-Speed);
             robot.backRight.setPower(Speed);
         }
-        while ( pos.y < Ypos ) {
+        else if ( pos.x > Xpos +.3){
+            robot.backLeft.setPower(Speed);
+            robot.frontLeft.setPower(-Speed);
+            robot.frontRight.setPower(Speed);
+            robot.backRight.setPower(-Speed);
+        }
+        else if ( pos.y < Ypos -.3) {
             robot.backLeft.setPower(Speed);
             robot.frontLeft.setPower(Speed);
             robot.frontRight.setPower(Speed);
             robot.backRight.setPower(Speed);
         }
-        while ( pos.h < Heading ) {
+        else if ( pos.y > Ypos +.3){
+            robot.backLeft.setPower(-Speed);
+            robot.frontLeft.setPower(-Speed);
+            robot.frontRight.setPower(-Speed);
+            robot.backRight.setPower(-Speed);
+        }
+        else if ( pos.h < Heading -.3) {
             robot.backLeft.setPower(-Speed);
             robot.frontLeft.setPower(-Speed);
             robot.frontRight.setPower(Speed);
             robot.backRight.setPower(Speed);
         }
-
-        robot.backLeft.setPower(0);
-        robot.frontLeft.setPower(0);
-        robot.frontRight.setPower(0);
-        robot.backRight.setPower(0);
+        else if ( pos.h > Heading +.3) {
+            robot.backLeft.setPower(Speed);
+            robot.frontLeft.setPower(Speed);
+            robot.frontRight.setPower(-Speed);
+            robot.backRight.setPower(-Speed);
+        }
+        else {
+            robot.backLeft.setPower(0);
+            robot.frontLeft.setPower(0);
+            robot.frontRight.setPower(0);
+            robot.backRight.setPower(0);
+        }
 
     }
 }
