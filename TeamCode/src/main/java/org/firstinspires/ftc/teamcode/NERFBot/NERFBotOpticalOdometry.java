@@ -21,7 +21,7 @@ public class NERFBotOpticalOdometry extends LinearOpMode {
         SparkFunOTOS.Pose2D pos;
         while (opModeIsActive()) {
             pos = robot.myOtos.getPosition();
-            LinearMovement(5, 0, 0, .2);
+            LinearMovement(5, 0, 0, .6);
             telemetry.addLine("X Position :" +pos.x);
             telemetry.addLine("Y Position :" +pos.y);
             telemetry.update();
@@ -34,37 +34,65 @@ public class NERFBotOpticalOdometry extends LinearOpMode {
 
     public void LinearMovement(double Xpos, double Ypos, double Heading, double Speed){
         SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
-        if ( pos.x < Xpos -.3) {
+        if ( pos.x < Xpos -1) {
             robot.backLeft.setPower(-Speed);
             robot.frontLeft.setPower(Speed);
             robot.frontRight.setPower(-Speed);
             robot.backRight.setPower(Speed);
         }
-        else if ( pos.x > Xpos +.3){
+        else if ( pos.x > Xpos +1){
             robot.backLeft.setPower(Speed);
             robot.frontLeft.setPower(-Speed);
             robot.frontRight.setPower(Speed);
             robot.backRight.setPower(-Speed);
         }
-        else if ( pos.y < Ypos -.3) {
+        else if (pos.x > Xpos +1 && pos.x< Xpos -1){
+            if (pos.x > Xpos + .25){
+                robot.backLeft.setPower(Speed/2);
+                robot.frontLeft.setPower(-Speed/2);
+                robot.frontRight.setPower(Speed);
+                robot.backRight.setPower(-Speed/2);
+            }
+            if (pos.x < Xpos - .25){
+                robot.backLeft.setPower(-Speed/2);
+                robot.frontLeft.setPower(Speed/2);
+                robot.frontRight.setPower(-Speed/2);
+                robot.backRight.setPower(Speed/2);
+            }
+        }
+        else if ( pos.y < Ypos -1) {
             robot.backLeft.setPower(Speed);
             robot.frontLeft.setPower(Speed);
             robot.frontRight.setPower(Speed);
             robot.backRight.setPower(Speed);
         }
-        else if ( pos.y > Ypos +.3){
+        else if ( pos.y > Ypos +1){
             robot.backLeft.setPower(-Speed);
             robot.frontLeft.setPower(-Speed);
             robot.frontRight.setPower(-Speed);
             robot.backRight.setPower(-Speed);
         }
-        else if ( pos.h < Heading -.3) {
+        else if (pos.y > Xpos +1 && pos.y< Xpos -1){
+            if (pos.y > Xpos + .25){
+                robot.backLeft.setPower(Speed/2);
+                robot.frontLeft.setPower(-Speed/2);
+                robot.frontRight.setPower(Speed);
+                robot.backRight.setPower(-Speed/2);
+            }
+            if (pos.x < Xpos - .25){
+                robot.backLeft.setPower(Speed/2);
+                robot.frontLeft.setPower(Speed/2);
+                robot.frontRight.setPower(Speed/2);
+                robot.backRight.setPower(Speed/2);
+            }
+        }
+        else if ( pos.h < Heading -1) {
             robot.backLeft.setPower(-Speed);
             robot.frontLeft.setPower(-Speed);
             robot.frontRight.setPower(Speed);
             robot.backRight.setPower(Speed);
         }
-        else if ( pos.h > Heading +.3) {
+        else if ( pos.h > Heading +1) {
             robot.backLeft.setPower(Speed);
             robot.frontLeft.setPower(Speed);
             robot.frontRight.setPower(-Speed);
