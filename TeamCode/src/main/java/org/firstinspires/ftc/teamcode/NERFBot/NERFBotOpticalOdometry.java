@@ -47,13 +47,13 @@ public class NERFBotOpticalOdometry extends LinearOpMode {
             robot.backRight.setPower(-Speed);
         }
         else if (pos.x > Xpos +1 && pos.x< Xpos -1){
-            if (pos.x > Xpos + .25){
+            if (pos.x > Xpos + .5){
                 robot.backLeft.setPower(Speed/2);
                 robot.frontLeft.setPower(-Speed/2);
-                robot.frontRight.setPower(Speed);
+                robot.frontRight.setPower(Speed/2);
                 robot.backRight.setPower(-Speed/2);
             }
-            if (pos.x < Xpos - .25){
+            if (pos.x < Xpos - .5){
                 robot.backLeft.setPower(-Speed/2);
                 robot.frontLeft.setPower(Speed/2);
                 robot.frontRight.setPower(-Speed/2);
@@ -73,13 +73,13 @@ public class NERFBotOpticalOdometry extends LinearOpMode {
             robot.backRight.setPower(-Speed);
         }
         else if (pos.y > Xpos +1 && pos.y< Xpos -1){
-            if (pos.y > Xpos + .25){
+            if (pos.y > Xpos + .5){
                 robot.backLeft.setPower(-Speed/2);
                 robot.frontLeft.setPower(-Speed/2);
-                robot.frontRight.setPower(-Speed);
+                robot.frontRight.setPower(-Speed/2);
                 robot.backRight.setPower(-Speed/2);
             }
-            if (pos.x < Xpos - .25){
+            if (pos.x < Xpos - .5){
                 robot.backLeft.setPower(Speed/2);
                 robot.frontLeft.setPower(Speed/2);
                 robot.frontRight.setPower(Speed/2);
@@ -99,13 +99,13 @@ public class NERFBotOpticalOdometry extends LinearOpMode {
             robot.backRight.setPower(-Speed);
         }
         else if (pos.h > Xpos +1 && pos.h< Xpos -1){
-            if (pos.h > Xpos + .25){
+            if (pos.h > Xpos + .5){
                 robot.backLeft.setPower(Speed/2);
                 robot.frontLeft.setPower(Speed/2);
-                robot.frontRight.setPower(-Speed);
+                robot.frontRight.setPower(-Speed/2);
                 robot.backRight.setPower(-Speed/2);
             }
-            if (pos.h < Xpos - .25){
+            if (pos.h < Xpos - .5){
                 robot.backLeft.setPower(-Speed/2);
                 robot.frontLeft.setPower(-Speed/2);
                 robot.frontRight.setPower(Speed/2);
